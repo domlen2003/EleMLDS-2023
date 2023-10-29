@@ -3,28 +3,38 @@ import matplotlib.pyplot as plt
 from scipy.stats import multivariate_normal
 
 
-def getLogLikelihood(means: list[list[float]], weights: list[float], covariances: list[list[list[float]]],
-                     X: list[list[float]]):
-    # Log Likelihood estimation
-    #
-    # INPUT:
-    # means          : Mean for each Gaussian KxD
-    # weights        : Weight vector 1xK for K Gaussians
-    # covariances    : Covariance matrices for each gaussian DxDxK
-    # X              : Input data NxD
-    # where N is number of data points
-    # D is the dimension of the data points
-    # K is number of gaussians
-    #
-    # OUTPUT:
-    # logLikelihood  : log-likelihood
+def getLogLikelihood(means_list: list[list[float]], weight_list: list[float],
+                     covariance_matrices: list[list[list[float]]], datapoints: list[list[float]]):
+    """Log Likelihood estimation
 
-    #####Insert your code here for subtask 6a#####
+        N is number of data points
+
+        D is the dimension of the data points
+
+        K is number of gaussians
+
+        Parameters
+        ----------
+        means_list: list[list[float]]
+            Mean for each Gaussian KxD
+        weight_list: list[float]
+            Weight vector 1xK for K Gaussians
+        covariance_matrices: list[list[list[float]]]
+            Covariance matrices for each gaussian DxDxK
+        datapoints: list[list[float]]
+            Input data NxD
+
+        Returns
+        -------
+        log_likelihood:
+            The log Likelihood estimation
+    """
+
     # Setup as numpy
-    means = np.array(means)
-    weights = np.array(weights)
-    covariances = np.array(covariances)
-    X = np.array(X)
+    means = np.array(means_list)
+    weights = np.array(weight_list)
+    covariances = np.array(covariance_matrices)
+    X = np.array(datapoints)
 
     # Number of data points
     N = X.shape[0]
@@ -34,11 +44,15 @@ def getLogLikelihood(means: list[list[float]], weights: list[float], covariances
 
     log_likelihood = 0
     for n in range(N):
-        # Calculate the likelihood for each Gaussian component for the given data point
         sum_for_data_point = 0
         for k in range(K):
-            sum_for_data_point += weights[k] * multivariate_normal.pdf(X[n], mean=means[k], cov=covariances[:, :, k]);
-        # Add the log of the likelihood for this data point to the total log likelihood
+            # calculate probability
+            probability = multivariate_normal.pdf(X[n], mean=means[k], cov=covariances[:, :, k])
+            # weight the probability
+            weighted_probability = weights[k] * probability
+            # sum over K
+            sum_for_data_point += weighted_probability
+        # sum over N
         log_likelihood += np.log(sum_for_data_point)
 
     return log_likelihood
