@@ -20,4 +20,25 @@ def MStep(gamma, X):
     # covariances    : Covariance matrices for each component(DxDxK).
 
     #####Insert your code here for subtask 6c#####
-    return weights, means, covariances, logLikelihood
+    N = X.shape[0]
+    D = X.shape[1]
+    K = gamma.shape[1]
+    M = np.zeros([K])
+    weights = np.zeros([K])
+    means = np.zeros((K,D))
+    covariances = np.zeros((D, D, K))
+    for j in range(K):
+        for n in range(N):
+            M[j] += gamma[n][j]
+        weights[j] = M[j] / N
+        for n in range(N):
+            means[j] += gamma[n][j] * X[n]
+        means[j] = (1/M[j]) * means[j]
+        for n in range(N):
+            #print(np.asmatrix(X[n] - means[j]))
+            #print(np.transpose(np.asmatrix( X[n] - means[j])))
+            #print(np.transpose(np.asmatrix(X[n] - means[j])).dot(np.asmatrix( X[n] - means[j])))
+            covariances[:,:,j] += gamma[n][j] * np.transpose(np.asmatrix(X[n] - means[j])).dot(np.asmatrix( X[n] - means[j]))
+            #print(np.shape(gamma[n][j] * (X[n] - means[j] )* np.transpose( X[n] - means[j])))
+        covariances[:,:,j] = (1/M[j]) * covariances[:,:,j]
+    return weights, means, covariances, getLogLikelihood(means, weights, covariances, X)

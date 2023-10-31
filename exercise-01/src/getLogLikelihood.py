@@ -1,58 +1,36 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from scipy.stats import multivariate_normal
+def getLogLikelihood(means, weights, covariances, X):
+    # Log Likelihood estimation
+    #
+    # INPUT:
+    # means          : Mean for each Gaussian KxD
+    # weights        : Weight vector 1xK for K Gaussians
+    # covariances    : Covariance matrices for each gaussian DxDxK
+    # X              : Input data NxD
+    # where N is number of data points
+    # D is the dimension of the data points
+    # K is number of gaussians
+    #
+    # OUTPUT:
+    # logLikelihood  : log-likelihood
 
-
-def getLogLikelihood(means_list: list[list[float]], weight_list: list[float],
-                     covariance_matrices: list[list[list[float]]], datapoints: list[list[float]]):
-    """Log Likelihood estimation
-
-        N is number of data points
-
-        D is the dimension of the data points
-
-        K is number of gaussians
-
-        Parameters
-        ----------
-        means_list: list[list[float]]
-            Mean for each Gaussian KxD
-        weight_list: list[float]
-            Weight vector 1xK for K Gaussians
-        covariance_matrices: list[list[list[float]]]
-            Covariance matrices for each gaussian DxDxK
-        datapoints: list[list[float]]
-            Input data NxD
-
-        Returns
-        -------
-        log_likelihood:
-            The log Likelihood estimation
-    """
-
-    # Setup as numpy
-    means = np.array(means_list)
-    weights = np.array(weight_list)
-    covariances = np.array(covariance_matrices)
-    X = np.array(datapoints)
-
-    # Number of data points
+    #####Insert your code here for subtask 6a#####
     N = X.shape[0]
+    D = X.shape[1]
+    K = len(means)
+    logLikelihood = 0
 
-    # Number of gaussians
-    K = means.shape[0]
-
-    log_likelihood = 0
     for n in range(N):
-        sum_for_data_point = 0
+        secSum  = 0
         for k in range(K):
-            # calculate probability
-            probability = multivariate_normal.pdf(X[n], mean=means[k], cov=covariances[:, :, k])
-            # weight the probability
-            weighted_probability = weights[k] * probability
-            # sum over K
-            sum_for_data_point += weighted_probability
-        # sum over N
-        log_likelihood += np.log(sum_for_data_point)
+            secSum += weights[k] * getMultiDimNorm(means[k], covariances[:,:,k], X[n], D)
+        logLikelihood += np.log(secSum)
+    return logLikelihood
 
-    return log_likelihood
+def getMultiDimNorm(mean, covariance, x, D):
+
+    divider = 1 / (np.power(2*np.pi, D/2) * np.power(np.linalg.det(covariance),1/2))
+    vector = np.asmatrix(x - mean)
+    e = (-(1/2) * vector.dot(np.linalg.inv(covariance)).dot(np.transpose(vector))).item()
+    multiDimNorm = divider * np.exp(e)
+    return multiDimNorm
