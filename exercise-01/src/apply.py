@@ -27,7 +27,7 @@ data = [[], [], []]
 data[0] = np.loadtxt("src/data/data/data1")
 data[1] = np.loadtxt("src/data/data/data2")
 data[2] = np.loadtxt("src/data/data/data3")
-
+"""
 # test getLogLikelihood
 print("(a) testing getLogLikelihood function")
 weights = [0.341398243018411, 0.367330235091507, 0.291271521890082]
@@ -59,7 +59,7 @@ for idx in range(3):
             ll, loglikelihoods[idx], diff
         )
     )
-'''
+
 # test EStep
 print("\n")
 print("(b) testing EStep function")
@@ -169,7 +169,7 @@ for idx in range(3):
     absdiff = abs(covariance - regularized_cov[:, :, idx])
     print("Sum of difference of covariances: {0}\n".format(np.sum(absdiff)))
 
-
+"""
 # compute GMM on all 3 datasets
 print("\n")
 print("(f) evaluating EM for GMM on all datasets")
@@ -185,7 +185,7 @@ for idx in range(3):
     plt.title("Data {0}".format(idx + 1))
     plt.show()
 
-
+"""
 # uncomment following lines to generate the result
 # for different number of modes k plot the log likelihood for data3
 num = 14
@@ -212,4 +212,4 @@ img = im2double(imageio.imread("data/faces/faces.png"))
 skin = skinDetection(ndata, sdata, skin_K, skin_n_iter, skin_epsilon, theta, img)
 plt.imshow(skin)
 plt.show()
-'''
+"""
