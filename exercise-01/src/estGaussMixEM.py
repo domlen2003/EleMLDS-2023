@@ -40,7 +40,7 @@ def estGaussMixEM(data, K, n_iters, epsilon):
             if dist < min_dist:
                 min_dist = dist
         covariances[:, :, j] = np.eye(D) * min_dist
-    
+
     # do n_inters iterationen of the EM Algo
     for n in range(n_iters):
 
@@ -50,5 +50,5 @@ def estGaussMixEM(data, K, n_iters, epsilon):
 
         l, gamma = EStep(means, covariances, weights, data) # E-Step
         weights, means, covariances, l = MStep(gamma, data) # M-Step
-    
+
     return [weights, means, covariances]
