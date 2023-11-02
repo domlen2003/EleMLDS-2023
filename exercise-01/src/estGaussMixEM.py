@@ -19,12 +19,14 @@ def estGaussMixEM(data, K, n_iters, epsilon):
     # covariances    : covariancesariance matrices of gaussians
 
     #####Insert your code here for subtask 6e#####
+
+    # init key variables
     N = data.shape[0]
     D = data.shape[1]
     covariances = np.zeros((D, D, K))
 
+    # code stolen from exercise sheet
     weights = np.ones(K) / K
-
     kmeans = KMeans(n_clusters = K, n_init = 10).fit(data)
     cluster_idx = kmeans.labels_
     means = kmeans.cluster_centers_
@@ -39,10 +41,14 @@ def estGaussMixEM(data, K, n_iters, epsilon):
                 min_dist = dist
         covariances[:, :, j] = np.eye(D) * min_dist
     
+    # do n_inters iterationen of the EM Algo
     for n in range(n_iters):
+
+        # for each mixture component regularize covariances
         for k in range(K):
             covariances[:,:,k] = regularize_cov(covariances[:,:,k],epsilon)
-        l, gamma = EStep(means, covariances, weights, data)
-        weights, means, covariances, l = MStep(gamma, data)
+
+        l, gamma = EStep(means, covariances, weights, data) # E-Step
+        weights, means, covariances, l = MStep(gamma, data) # M-Step
     
     return [weights, means, covariances]

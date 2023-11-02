@@ -15,22 +15,25 @@ def getLogLikelihood(means, weights, covariances, X):
     # logLikelihood  : log-likelihood
 
     #####Insert your code here for subtask 6a#####
+
+
+    #init key Variables
     N = X.shape[0]
     D = X.shape[1]
     K = len(means)
     logLikelihood = 0
 
-    for n in range(N):
+    for n in range(N): # outer sum of logliklihood calculations 
         secSum  = 0
-        for k in range(K):
+        for k in range(K): #inner sum of logliklihood calculations 
             secSum += weights[k] * getMultiDimNorm(means[k], covariances[:,:,k], X[n], D)
         logLikelihood += np.log(secSum)
     return logLikelihood
 
 def getMultiDimNorm(mean, covariance, x, D):
 
-    divider = 1 / (np.power(2*np.pi, D/2) * np.power(np.linalg.det(covariance),1/2))
-    vector = np.asmatrix(x - mean)
-    e = (-(1/2) * vector.dot(np.linalg.inv(covariance)).dot(np.transpose(vector))).item()
-    multiDimNorm = divider * np.exp(e)
+    divider = 1 / (np.power(2*np.pi, D/2) * np.power(np.linalg.det(covariance),1/2)) #first part of the Normaldistibution 
+    vector = np.asmatrix(x - mean) #init vector 
+    e = (-(1/2) * vector.dot(np.linalg.inv(covariance)).dot(np.transpose(vector))).item() #inside of exp()
+    multiDimNorm = divider * np.exp(e) # final Normaldistribution
     return multiDimNorm

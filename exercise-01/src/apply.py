@@ -169,7 +169,7 @@ for idx in range(3):
     absdiff = abs(covariance - regularized_cov[:, :, idx])
     print("Sum of difference of covariances: {0}\n".format(np.sum(absdiff)))
 
-"""
+
 # compute GMM on all 3 datasets
 print("\n")
 print("(f) evaluating EM for GMM on all datasets")
@@ -185,7 +185,7 @@ for idx in range(3):
     plt.title("Data {0}".format(idx + 1))
     plt.show()
 
-"""
+
 # uncomment following lines to generate the result
 # for different number of modes k plot the log likelihood for data3
 num = 14
@@ -194,13 +194,14 @@ for k in range(num):
     # compute GMM
     weights, means, covariances = estGaussMixEM(data[2], k + 1, n_iter, epsilon)
     logLikelihood[k] = getLogLikelihood(means, weights, covariances, data[2])
+    print(k)
 
 # plot result
 plt.subplot()
 plt.plot(range(num), logLikelihood)
 plt.title("Loglikelihood for different number of k on Data 3")
 plt.show()
-
+"""
 # skin detection
 print("\n")
 print("(g) performing skin detection with GMMs")
@@ -212,4 +213,3 @@ img = im2double(imageio.imread("data/faces/faces.png"))
 skin = skinDetection(ndata, sdata, skin_K, skin_n_iter, skin_epsilon, theta, img)
 plt.imshow(skin)
 plt.show()
-"""
