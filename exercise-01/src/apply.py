@@ -9,6 +9,7 @@ from parameters import parameters
 from plotModes import plotModes
 from regularize_cov import regularize_cov
 from skinDetection import skinDetection
+from sklearn.model_selection import train_test_split
 
 epsilon, K, n_iter, skin_n_iter, skin_epsilon, skin_K, theta = parameters()
 
@@ -24,10 +25,12 @@ print("Question: Expectation Maximization Algorithm for GMMs")
 
 # load datasets
 data = [[], [], []]
-data[0] = np.loadtxt("data/data/data1")
-data[1] = np.loadtxt("data/data/data2")
-data[2] = np.loadtxt("data/data/data3")
+data[0] = np.loadtxt("src/data/data/data1")
+data[1] = np.loadtxt("src/data/data/data2")
+data[2] = np.loadtxt("src/data/data/data3")
+train, test = train_test_split(data[0])
 
+"""
 # test getLogLikelihood
 print("(a) testing getLogLikelihood function")
 weights = [0.341398243018411, 0.367330235091507, 0.291271521890082]
@@ -59,7 +62,7 @@ for idx in range(3):
             ll, loglikelihoods[idx], diff
         )
     )
-'''
+
 # test EStep
 print("\n")
 print("(b) testing EStep function")
@@ -170,20 +173,24 @@ for idx in range(3):
     print("Sum of difference of covariances: {0}\n".format(np.sum(absdiff)))
 
 
+
 # compute GMM on all 3 datasets
 print("\n")
-print("(f) evaluating EM for GMM on all datasets")
+print(f"(f) evaluating EM for GMM on all datasets with {K} gaussians")
 for idx in range(3):
-    print("evaluating on dataset {0}\n".format(idx + 1))
 
     # compute GMM
     weights, means, covariances = estGaussMixEM(data[idx], K, n_iter, epsilon)
+
+    print("evaluated dataset {0}\n".format(idx + 1),
+          f"   LogL: {getLogLikelihood(means, weights, covariances, data[idx])}")
 
     # plot result
     plt.subplot()
     plotModes(np.transpose(means), covariances, data[idx])
     plt.title("Data {0}".format(idx + 1))
     plt.show()
+
 
 
 # uncomment following lines to generate the result
@@ -194,6 +201,7 @@ for k in range(num):
     # compute GMM
     weights, means, covariances = estGaussMixEM(data[2], k + 1, n_iter, epsilon)
     logLikelihood[k] = getLogLikelihood(means, weights, covariances, data[2])
+    print(k)
 
 # plot result
 plt.subplot()
@@ -201,15 +209,28 @@ plt.plot(range(num), logLikelihood)
 plt.title("Loglikelihood for different number of k on Data 3")
 plt.show()
 
+"""
 # skin detection
 print("\n")
 print("(g) performing skin detection with GMMs")
-sdata = np.loadtxt("data/skin/skin.dat")
-ndata = np.loadtxt("data/skin/non-skin.dat")
+sdata = np.loadtxt("src/data/skin/skin.dat")
+ndata = np.loadtxt("src/data/skin/non-skin.dat")
 
-img = im2double(imageio.imread("data/faces/faces.png"))
+img = im2double(imageio.imread("src/data/faces/faces.png"))
+
 
 skin = skinDetection(ndata, sdata, skin_K, skin_n_iter, skin_epsilon, theta, img)
+plt.title(f"K: {skin_K}, Iterations: {skin_n_iter}, Epsilon: {skin_epsilon}, Threshold: {theta}")
 plt.imshow(skin)
 plt.show()
-'''
+"""
+# Tests model performance on train and test data
+# compute GMM
+weights, means, covariances = estGaussMixEM(train, K, n_iter, epsilon)
+
+# plot result
+plt.subplot()
+plotModes(np.transpose(means), covariances, test)
+plt.title(f"Train Data 1. Iterations: {n_iter} LL: {getLogLikelihood(means, weights, covariances, test)}")
+plt.show()
+"""
