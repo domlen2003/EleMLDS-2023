@@ -82,10 +82,10 @@ if __name__ == "__main__":
 
     def f1_score(cm):
         "Compute the f1-score of a model given its confusion matrix"
-        return 2 * precision(cm) * recall(cm) / (precision(cm) + recall(cm))
+        return (2 * precision(cm) * recall(cm)) / (precision(cm) + recall(cm))
 
-    # ###### Printing the results here ##########
-    # # Compute the average precision, recall and f1-score for each model and print it
+    ###### Printing the results here ##########
+    # Compute the average precision, recall and f1-score for each model and print it
     print("Logistic Regression")
     print("Precision: ", (precision(log_reg1_conf_matrix) + precision(log_reg2_conf_matrix) + precision(log_reg3_conf_matrix))/3)
     print("Recall: ", (recall(log_reg1_conf_matrix) + recall(log_reg2_conf_matrix) + recall(log_reg3_conf_matrix))/3)
