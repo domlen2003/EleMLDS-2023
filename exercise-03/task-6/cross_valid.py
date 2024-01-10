@@ -73,15 +73,15 @@ if __name__ == "__main__":
     dec_tree3_conf_matrix = confusion_matrix(cv_test1_y, dec_tree3_pred)
 
     def precision(cm):
-        "Compute the precision of a model given its confusion matrix"
+        """Compute the precision of a model given its confusion matrix"""
         return cm[0][0]/(cm[0][0] + cm[1][0])
 
     def recall(cm):
-        "Compute the recall of a model given its confusion matrix"
+        """Compute the recall of a model given its confusion matrix"""
         return cm[0][0]/(cm[0][0] + cm[0][1])
 
     def f1_score(cm):
-        "Compute the f1-score of a model given its confusion matrix"
+        """Compute the f1-score of a model given its confusion matrix"""
         return (2 * precision(cm) * recall(cm)) / (precision(cm) + recall(cm))
 
     ###### Printing the results here ##########
